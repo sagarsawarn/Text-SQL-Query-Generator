@@ -7,6 +7,14 @@ from langchain_community.utilities import SQLDatabase
 from langchain_google_genai import ChatGoogleGenerativeAI
 
 
+REQUEST_TIMEOUT_SECONDS = 45
+
+# The AI explanation is a second, separate model call after the SQL is
+# generated, which roughly doubles the wait. Set to True to bring it back;
+# otherwise the instant local explainer (explain_sql) is used.
+USE_AI_EXPLANATION = False
+
+
 def clean_sql(sql_code):
     clean_sql_code = re.sub(r"```(?:sqlite|sql)?\n(.*?)\n```", r"\1", sql_code, flags=re.DOTALL).strip()
     return clean_sql_code
@@ -72,11 +80,46 @@ def explain_sql(query):
     return explanation + "."
 
 
+MAX_DISTINCT_VALUES = 25
+MAX_VALUE_LENGTH = 40
+SAMPLE_ROWS = 5
+
+
+def build_table_info(engine):
+    """Describe every table with its columns, sample rows and, for columns
+    with few distinct values, the real values stored in them. Without the real
+    values the model has to guess (e.g. 'Engineering' vs 'Software'), which
+    makes queries run fine but return zero rows."""
+    db = SQLDatabase(engine, sample_rows_in_table_info=SAMPLE_ROWS)
+    parts = [db.get_table_info()]
+
+    with engine.connect() as conn:
+        for table in db.get_usable_table_names():
+            df = pd.read_sql(f'SELECT * FROM "{table}"', conn)
+            lines = [f'Row count of "{table}": {len(df)}']
+            for column in df.columns:
+                series = df[column].dropna()
+                if series.empty:
+                    continue
+                if series.dtype == object:
+                    distinct = series.astype(str).unique()
+                    if len(distinct) <= MAX_DISTINCT_VALUES:
+                        values = ", ".join(repr(v[:MAX_VALUE_LENGTH]) for v in distinct)
+                        lines.append(f'Distinct values of "{column}": {values}')
+                elif pd.api.types.is_numeric_dtype(series):
+                    lines.append(f'Range of "{column}": {series.min()} to {series.max()}')
+            parts.append("\n".join(lines))
+
+    return "\n\n".join(parts)
+
+
 class Text2SQL():
     def __init__(self, model_info, question="Get all row?"):
         self.model = {
-            "Gemini": lambda: ChatGoogleGenerativeAI(model=model_info["model_name"], google_api_key=model_info["api_key"], max_retries=0),
-            "GPT": lambda: ChatOpenAI(model=model_info["model_name"], api_key=model_info["api_key"]),
+            # A request timeout stops the UI spinner from hanging forever when
+            # the provider is slow or the connection stalls.
+            "Gemini": lambda: ChatGoogleGenerativeAI(model=model_info["model_name"], google_api_key=model_info["api_key"], max_retries=0, timeout=REQUEST_TIMEOUT_SECONDS, transport="rest", thinking_budget=0),
+            "GPT": lambda: ChatOpenAI(model=model_info["model_name"], api_key=model_info["api_key"], timeout=REQUEST_TIMEOUT_SECONDS, max_retries=1),
         }[model_info["model_type"]]
         self.question = question
         # Filled in by get_answer()/init_db(); used later by fix_query() so a
@@ -98,8 +141,7 @@ class Text2SQL():
             table_name = "data" if file_index == 0 else table_name
             df.to_sql(table_name, self.engine, if_exists="replace", index=False)
 
-        db = SQLDatabase(self.engine)
-        table_info = db.get_table_info()
+        table_info = build_table_info(self.engine)
         return self.get_answer(f"The primary uploaded table is named data.\n\n{table_info}")
 
     def get_answer(self, data_info):
@@ -112,6 +154,8 @@ class Text2SQL():
     def get_explanation(self, query):
         """Feature: real AI-generated explanation instead of a regex guess.
         Falls back to the local regex explainer if the model call fails."""
+        if not USE_AI_EXPLANATION:
+            return explain_sql(query)
         try:
             chain = explanation_prompt | self.model()
             response = chain.invoke({"query": query})

@@ -1,12 +1,13 @@
 import streamlit as st
 
 from auth import save_model_choice
+from utils import get_env_api_key
 
 
 def sidebar_block():
     model_dict = {
         "GPT": ["gpt-4o", "gpt-4-turbo", "gpt-4", "gpt-3.5-turbo", "Other"],
-        "Gemini": ["gemini-3.8-flash", "gemini-3.6-flash", "gemini-3.5-flash", "Other"]
+        "Gemini": ["gemini-3.1-flash-lite", "gemini-3.5-flash", "gemini-3.6-flash", "gemini-3.8-flash", "Other"]
     }
 
     with st.popover("Model Settings"):
@@ -33,7 +34,15 @@ def sidebar_block():
             else:
                 other_model.empty()
 
-            api_key = st.text_input("API Key :key:", type="password", key="api_key")
+            env_key = get_env_api_key(model_type)
+            api_key = st.text_input(
+                "API Key :key:",
+                type="password",
+                key="api_key",
+                placeholder="Using key from .env" if env_key else "",
+                help="Leave empty to use the key saved in the project's .env file.",
+            )
+            api_key = api_key.strip() or env_key
 
     st.caption(f"{model_type} · {model_name}")
 

@@ -941,9 +941,13 @@ if ask_button:
                 except (OSError, ValueError, ImportError):
                     logger.exception("Uploaded file could not be processed")
                     st.error("Unable to read the uploaded file. Check that it is a valid CSV or XLSX file.")
-                except Exception:
+                except Exception as error:
                     logger.exception("Excel/CSV query generation failed")
-                    st.error("Unable to process the uploaded file. Check the terminal for details.")
+                    st.error(
+                        "Unable to process the uploaded file or generate SQL "
+                        f"({type(error).__name__}: {str(error)[:300]}). "
+                        "Check the model name, API key and internet connection."
+                    )
 
             if result_query is not None and not result_is_demo and "don't" not in result_query:
                 add_query_history(question_text, result_query)
@@ -1002,8 +1006,34 @@ if result_query:
                             result_query = fixed_query
                             result_df = result_text2sql.run_query(fixed_query)
 
+                        if result_df.empty and not result_is_demo:
+                            # The SQL is valid but matched nothing, which usually
+                            # means a filter value or column was guessed wrong.
+                            # Give the model one chance to correct it.
+                            try:
+                                with st.spinner("No rows matched — asking the AI to check the filter values..."):
+                                    retry_query = result_text2sql.fix_query(
+                                        getattr(result_text2sql, "table_info", "") or "",
+                                        result_query,
+                                        "The query ran but returned 0 rows. Use only values listed under "
+                                        "'Distinct values' or in the sample rows, and use a simpler or "
+                                        "case-insensitive filter.",
+                                    )
+                                if retry_query.strip().lower().startswith("select") and retry_query != result_query:
+                                    retry_df = result_text2sql.run_query(retry_query)
+                                    if not retry_df.empty:
+                                        st.info("The first query returned no rows, so it was adjusted:")
+                                        st.code(retry_query, language="sql")
+                                        result_query, result_df = retry_query, retry_df
+                            except Exception:
+                                logger.exception("Empty-result retry failed")
+
                         if not result_df.empty and not result_is_demo:
                             mark_query_has_results(st.session_state["user_email"], result_query)
+                        if result_df.empty:
+                            st.warning("The query ran but no rows in the dataset match it. Try rephrasing the question.")
+                        else:
+                            st.caption(f"{len(result_df)} row(s) returned")
                         st.dataframe(result_df, use_container_width=True)
                         st.download_button(
                             "Download Results as CSV",
