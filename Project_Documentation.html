@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Text2SQL-AI Project Documentation</title>
+<style>
+  @page { size: A4; margin: 18mm 16mm 18mm 16mm; }
+  :root { --ink:#172033; --muted:#5b667a; --brand:#4f46e5; --brand2:#2563eb; --line:#dfe4ee; --soft:#f5f7fb; --code:#172033; }
+  * { box-sizing:border-box; }
+  body { margin:0; color:var(--ink); font-family: "Segoe UI", Arial, sans-serif; font-size:10.3pt; line-height:1.52; }
+  h1,h2,h3,h4 { color:var(--ink); line-height:1.2; margin:0 0 9px; }
+  h1 { font-size:29pt; letter-spacing:-.7px; }
+  h2 { font-size:18pt; border-bottom:2px solid var(--brand); padding-bottom:5px; margin-top:26px; }
+  h3 { font-size:13pt; color:#273a85; margin-top:18px; }
+  h4 { font-size:11pt; margin-top:13px; }
+  p { margin:7px 0 9px; }
+  ul,ol { margin:6px 0 10px 22px; padding:0; }
+  li { margin:3px 0; }
+  code { font-family: Consolas, "Courier New", monospace; font-size:9pt; background:#eef1f7; padding:1px 4px; border-radius:3px; }
+  pre { background:var(--code); color:#eef2ff; padding:11px 13px; border-radius:7px; overflow:hidden; font:8.4pt/1.45 Consolas, "Courier New", monospace; white-space:pre-wrap; }
+  .cover { min-height:245mm; display:flex; flex-direction:column; justify-content:center; padding:15mm 8mm; page-break-after:always; }
+  .logo { width:68px; height:68px; display:flex; align-items:center; justify-content:center; border-radius:18px; background:linear-gradient(135deg,var(--brand2),#7c3aed); color:white; font-size:31px; font-weight:800; box-shadow:0 9px 24px #4f46e54d; margin-bottom:25px; }
+  .subtitle { color:var(--muted); font-size:15pt; max-width:540px; margin-top:12px; }
+  .cover-meta { margin-top:42px; color:var(--muted); border-top:1px solid var(--line); padding-top:14px; max-width:540px; }
+  .badge { display:inline-block; background:#e9e9ff; color:#3730a3; border-radius:99px; padding:4px 10px; font-size:8.5pt; font-weight:700; margin:3px 4px 3px 0; }
+  .toc { background:var(--soft); border:1px solid var(--line); border-radius:8px; padding:13px 17px; margin:12px 0 20px; }
+  .toc ol { margin-bottom:0; columns:2; }
+  .callout { border-left:4px solid var(--brand); background:#f0f3ff; padding:10px 13px; margin:12px 0; }
+  .warning { border-left-color:#d97706; background:#fff8e8; }
+  .success { border-left-color:#059669; background:#ecfdf5; }
+  .grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin:10px 0; }
+  .card { border:1px solid var(--line); border-radius:8px; padding:11px 13px; background:#fff; }
+  .card strong { display:block; color:#273a85; margin-bottom:4px; }
+  table { width:100%; border-collapse:collapse; margin:9px 0 14px; font-size:9.2pt; }
+  th { background:#e9edff; color:#273a85; text-align:left; }
+  th,td { border:1px solid var(--line); padding:6px 8px; vertical-align:top; }
+  tr:nth-child(even) td { background:#fafbfe; }
+  .flow { display:flex; align-items:stretch; gap:5px; margin:14px 0; }
+  .step { flex:1; text-align:center; background:var(--soft); border:1px solid #cfd7ea; border-radius:7px; padding:9px 5px; font-size:8.5pt; }
+  .step b { display:block; color:#273a85; font-size:9.5pt; margin-bottom:3px; }
+  .arrow { align-self:center; color:var(--brand); font-size:15pt; font-weight:700; }
+  .page-break { page-break-before:always; }
+  .small { color:var(--muted); font-size:8.8pt; }
+  .mono { font-family:Consolas,monospace; }
+  .footer-note { color:var(--muted); font-size:8.5pt; border-top:1px solid var(--line); padding-top:8px; margin-top:22px; }
+  @media print { a { color:inherit; text-decoration:none; } .no-break { break-inside:avoid; } }
+</style>
+</head>
+<body>
+
+<section class="cover">
+  <div class="logo">SQL</div>
+  <h1>Text2SQL-AI</h1>
+  <div class="subtitle">Complete Project Documentation<br>Natural-language questions to safe, explainable SQL results</div>
+  <div style="margin-top:24px">
+    <span class="badge">Streamlit</span><span class="badge">Python</span><span class="badge">SQLite</span><span class="badge">OpenAI / Gemini</span><span class="badge">Pandas</span>
+  </div>
+  <div class="cover-meta">
+    <b>Document purpose</b><br>
+    Setup, operation, architecture, workflows, maintenance, troubleshooting, and deployment guidance for the Gen-AI-Powered-Text-to-SQL-Query-Generator project.
+    <br><br><span class="small">Prepared from the current source code and configuration · 16 November 2026</span>
+  </div>
+</section>
+
+<h2>Contents</h2>
+<div class="toc">
+<ol>
+  <li>Project overview</li>
+  <li>Capabilities and limitations</li>
+  <li>System architecture</li>
+  <li>Repository structure</li>
+  <li>Installation and configuration</li>
+  <li>Starting the application</li>
+  <li>End-user workflow</li>
+  <li>Text Input workflow</li>
+  <li>CSV/XLSX upload workflow</li>
+  <li>SQL generation and safety controls</li>
+  <li>Results, charts, and exports</li>
+  <li>Authentication and stored data</li>
+  <li>Operations and maintenance</li>
+  <li>Troubleshooting</li>
+  <li>Security and production checklist</li>
+  <li>Developer extension guide</li>
+  <li>Legacy entry point and licensing</li>
+</ol>
+</div>
+
+<h2>1. Project overview</h2>
+<p>Text2SQL-AI is a Streamlit web application that lets a user describe a data question in ordinary language and receive a SQL <code>SELECT</code> query. The full application can either use a manually described schema or load one or more CSV/XLSX files into a temporary in-memory SQLite database. An OpenAI or Google Gemini chat model uses the schema, sample rows, distinct values, and the question to generate SQL.</p>
+<p>The main implementation is in <code>main.py</code>. It provides registration/login, a dashboard, model settings, two data-input modes, query history, result previews, CSV downloads, and a small automatic chart. The reusable text-to-SQL engine is in <code>process/rag_process.py</code>.</p>
+<div class="callout"><b>Important:</b> the current production-style flow is <code>streamlit run main.py</code>. <code>app.py</code> is a smaller legacy/demo entry point and does not provide the full authentication and upload workflow.</div>
+
+<h2>2. Capabilities and limitations</h2>
+<div class="grid">
+  <div class="card"><strong>Natural-language SQL</strong>Generate SQL from a question using an LLM and schema context.</div>
+  <div class="card"><strong>Two data modes</strong>Describe a schema as text, or upload CSV/XLSX files.</div>
+  <div class="card"><strong>Two providers</strong>Choose an OpenAI-compatible GPT model or a Google Gemini model.</div>
+  <div class="card"><strong>Safe preview</strong>Only a single read-only <code>SELECT</code> is previewed from uploaded data.</div>
+  <div class="card"><strong>Self-correction</strong>Failed queries and empty-result filters may be sent back to the model for one correction attempt.</div>
+  <div class="card"><strong>Usable results</strong>Display a dataframe, download CSV, and show a basic chart when the result is suitable.</div>
+</div>
+<h3>Current boundaries</h3>
+<ul>
+  <li>Uploaded data is loaded into an in-memory SQLite database; it is not a permanent database connection.</li>
+  <li>The text-schema mode generates SQL but does not execute it because it has no database engine behind the free-form description.</li>
+  <li>The application does not currently connect to MySQL, PostgreSQL, or SQL Server despite older documentation mentioning those systems.</li>
+  <li>API keys are required for non-demo AI generation and are never saved to <code>users.json</code>.</li>
+  <li>Generated SQL is model output. Users should review it before relying on business-critical results.</li>
+</ul>
+
+<h2>3. System architecture</h2>
+<div class="flow">
+  <div class="step"><b>1. Browser</b>User, schema/file, question</div><div class="arrow">→</div>
+  <div class="step"><b>2. Streamlit</b>Session state and UI</div><div class="arrow">→</div>
+  <div class="step"><b>3. Text2SQL</b>Schema enrichment</div><div class="arrow">→</div>
+  <div class="step"><b>4. LLM</b>SQL generation</div><div class="arrow">→</div>
+  <div class="step"><b>5. SQLite</b>Read-only preview</div><div class="arrow">→</div>
+  <div class="step"><b>6. Output</b>Table, CSV, chart</div>
+</div>
+<h3>Request lifecycle</h3>
+<ol>
+  <li><code>main.py</code> initializes Streamlit configuration, authentication state, and general session defaults.</li>
+  <li>An unauthenticated visitor sees the login/register page. An authenticated user sees the workspace and model sidebar.</li>
+  <li>The sidebar chooses provider, model name, and API key. The key can come from the sidebar or <code>.env</code>.</li>
+  <li>The user supplies schema text or uploads files, then enters or records a question.</li>
+  <li><code>Text2SQL</code> builds a schema description. For files, Pandas loads each file and SQLAlchemy writes it to SQLite memory.</li>
+  <li>The prompt in <code>process/prompt_process.py</code> asks the model for SQL only and tells it to use only known table/column names.</li>
+  <li>The response is cleaned of Markdown fences. For file mode, a single read-only <code>SELECT</code> is validated and executed.</li>
+  <li>Errors can trigger a model-assisted correction. Empty results can trigger one filter-value correction.</li>
+  <li>The UI shows SQL, an explanation, a result table, a CSV download, and a chart when applicable.</li>
+</ol>
+
+<h2>4. Repository structure</h2>
+<table>
+<tr><th>Path</th><th>Responsibility</th></tr>
+<tr><td><code>main.py</code></td><td>Primary Streamlit application, page routing, UI, demo data, query orchestration, results, charts, and errors.</td></tr>
+<tr><td><code>auth.py</code></td><td>Registration, login, PBKDF2 password hashing, session auth state, query history, model preference persistence, and user sidebar.</td></tr>
+<tr><td><code>process/rag_process.py</code></td><td>LLM clients, schema inspection, file-to-SQLite loading, SQL cleanup, read-only validation, explanations, correction, and execution.</td></tr>
+<tr><td><code>process/prompt_process.py</code></td><td>Generation, explanation, and correction prompt templates.</td></tr>
+<tr><td><code>components/sidebar.py</code></td><td>Provider/model/API-key settings and saved model preference.</td></tr>
+<tr><td><code>utils.py</code></td><td>Environment key lookup, session defaults, and input validation messages.</td></tr>
+<tr><td><code>app.py</code></td><td>Small legacy flow using <code>sql_generator.py</code> and <code>database.py</code>.</td></tr>
+<tr><td><code>sql_generator.py</code></td><td>Legacy placeholder generator; it currently returns a placeholder instead of calling an LLM.</td></tr>
+<tr><td><code>database.py</code></td><td>Legacy SQLite reader for <code>sample_database.db</code>.</td></tr>
+<tr><td><code>requirements.txt</code></td><td>Python runtime dependencies and pinned versions.</td></tr>
+<tr><td><code>.env.example</code></td><td>Template for provider API keys. Copy to <code>.env</code> and fill only the key needed.</td></tr>
+<tr><td><code>users.json</code></td><td>Local user records and query history; stored one directory above the project by <code>auth.py</code>.</td></tr>
+</table>
+
+<h2>5. Installation and configuration</h2>
+<h3>Prerequisites</h3>
+<ul>
+  <li>Windows, macOS, or Linux.</li>
+  <li>Python 3.10+ recommended.</li>
+  <li>Internet access for OpenAI/Gemini calls.</li>
+  <li>An OpenAI API key or Google AI/Gemini API key for non-demo requests.</li>
+</ul>
+<h3>Install</h3>
+<pre>cd Gen-AI-Powered-Text-to-SQL-Query-Generator
+python -m venv .venv
+# Windows PowerShell:
+.\.venv\Scripts\Activate.ps1
+# Windows Command Prompt:
+.\.venv\Scripts\activate.bat
+python -m pip install --upgrade pip
+pip install -r requirements.txt</pre>
+<h3>Configure the API key</h3>
+<pre>copy .env.example .env
+# Edit .env:
+OPENAI_API_KEY=your_openai_key
+GOOGLE_API_KEY=your_google_key</pre>
+<p>For GPT, <code>OPENAI_API_KEY</code> is checked. For Gemini, <code>GOOGLE_API_KEY</code> and then <code>GEMINI_API_KEY</code> are checked. The sidebar key field overrides the environment key for the current session.</p>
+<div class="callout warning"><b>Do not commit secrets.</b> Keep <code>.env</code> local, restrict access to the project folder, and rotate a key immediately if it is exposed.</div>
+
+<h2>6. Starting the application</h2>
+<h3>Recommended full application</h3>
+<pre>cd Gen-AI-Powered-Text-to-SQL-Query-Generator
+.\.venv\Scripts\Activate.ps1
+streamlit run main.py</pre>
+<p>Streamlit prints a local URL, normally <code>http://localhost:8501</code>. Open it in a browser. Stop the server with <code>Ctrl+C</code>.</p>
+<h3>Legacy application</h3>
+<pre>streamlit run app.py</pre>
+<p>Use this only when intentionally testing the older simple flow. It asks for a question and calls the placeholder in <code>sql_generator.py</code>; it is not the recommended application entry point.</p>
+
+<h2>7. End-user workflow</h2>
+<ol>
+  <li>Open the Streamlit URL.</li>
+  <li>Choose <b>Register</b>, enter name/email/password, and submit. Passwords must be at least six characters and are stored as PBKDF2-SHA256 hashes with a random salt.</li>
+  <li>Return to <b>Login</b> and sign in.</li>
+  <li>In the sidebar, open <b>Model Settings</b>, choose GPT or Gemini, choose a model, and confirm the API key is configured.</li>
+  <li>Choose <b>Text2SQL</b> in the workspace navigation.</li>
+  <li>Choose <b>Text Input</b> or <b>Upload File</b>.</li>
+  <li>Provide the data context, enter a question, and click <b>Generate SQL</b>.</li>
+  <li>Review the generated SQL and explanation. If files were uploaded, review the result preview.</li>
+  <li>Download results as <code>query_results.csv</code> if needed.</li>
+  <li>Use <b>Query History</b> to search, reuse, or clear previous generated queries. Use <b>Logout</b> when finished.</li>
+</ol>
+
+<h2>8. Text Input workflow</h2>
+<p>Text Input is useful when the schema is known but the application does not have a file to load. Enter a clear table description, for example:</p>
+<pre>employees table with columns:
+id, name, department, salary, age
+
+Sample rows:
+1, Rahul, IT, 55000, 24
+2, Priya, HR, 45000, 28</pre>
+<p>Then ask: <i>“Show employees from the IT department earning more than 50000.”</i> The model receives the schema text and question and returns SQL. Because no executable database is created for free-form text, the UI displays the SQL but does not preview rows.</p>
+<h3>Tips for accurate text schemas</h3>
+<ul>
+  <li>Use exact table and column names.</li>
+  <li>Include data types or representative sample rows when filters depend on values.</li>
+  <li>Explain relationships explicitly if multiple tables are described.</li>
+  <li>Ask one focused question at a time.</li>
+</ul>
+<div class="callout success"><b>Try Demo:</b> the built-in employee examples run locally and do not require a model or API key. They are useful for checking the interface.</div>
+
+<h2>9. CSV/XLSX upload workflow</h2>
+<ol>
+  <li>Choose <b>Upload File</b> and upload one or more <code>.csv</code> or <code>.xlsx</code> files.</li>
+  <li>The first uploaded file becomes the primary table named <code>data</code>. Additional files use the filename without extension as the table name.</li>
+  <li>CSV files are read with <code>pandas.read_csv</code>; Excel files use <code>pandas.read_excel</code>.</li>
+  <li>Each dataframe is written to the same in-memory SQLite engine with <code>if_exists="replace"</code>.</li>
+  <li>The application inspects table names, columns, sample rows, row counts, distinct text values (up to 25), and numeric ranges.</li>
+  <li>The enriched table information is sent to the model with the natural-language question.</li>
+  <li>The returned query is validated and previewed against the in-memory data.</li>
+</ol>
+<h3>File naming and data tips</h3>
+<ul>
+  <li>Use simple filenames such as <code>orders.xlsx</code>; filenames become table names for files after the first.</li>
+  <li>Use unique, SQL-friendly column names without blank headers.</li>
+  <li>Keep the first row as the header row.</li>
+  <li>Remove sensitive data before uploading unless the deployment is approved for that data.</li>
+  <li>Large files increase memory usage and schema-inspection time.</li>
+</ul>
+
+<h2>10. SQL generation and safety controls</h2>
+<h3>Prompt behavior</h3>
+<p>The generation prompt instructs the model to output SQL only, use only known tables/columns, prefer a simple <code>SELECT</code>, compare text case-insensitively, and return exactly <code>I don't know</code> when the question is unrelated or cannot be answered from the schema.</p>
+<h3>Read-only validation</h3>
+<p><code>is_read_only_select</code> removes comments and checks that the query begins with <code>SELECT</code> and contains no additional semicolon. This blocks common write operations and multiple statements during preview. The query then runs through Pandas against the temporary SQLite connection.</p>
+<div class="callout warning"><b>Scope of protection:</b> this is an application-level preview guard, not a complete SQL security boundary. Do not expose the app to untrusted users or sensitive databases without stronger isolation, authorization, auditing, and database permissions.</div>
+<h3>Automatic correction</h3>
+<ol>
+  <li>If execution fails, the original question, schema, failed SQL, and database error are sent to the correction prompt.</li>
+  <li>The model returns a corrected SQL query.</li>
+  <li>The corrected query is run again through the same read-only validation.</li>
+  <li>If a valid query returns zero rows, the application makes one correction attempt focused on distinct values and case-insensitive filters.</li>
+</ol>
+
+<h2>11. Results, charts, and exports</h2>
+<ul>
+  <li><b>Generated SQL:</b> shown in a SQL code block.</li>
+  <li><b>SQL Explanation:</b> generated locally by a regex-based explainer by default. The optional AI explanation path is disabled by <code>USE_AI_EXPLANATION = False</code>.</li>
+  <li><b>Query Results:</b> displayed as a Pandas dataframe for uploaded data.</li>
+  <li><b>CSV download:</b> downloads the result as <code>query_results.csv</code>.</li>
+  <li><b>Chart:</b> when the result has at least one numeric and one text column and no more than 30 rows, a bar chart is rendered. ID-like columns are avoided when another numeric column exists.</li>
+  <li><b>Query history:</b> non-demo generated queries are stored per user. Entries are marked as having results when a non-empty result is returned.</li>
+</ul>
+
+<h2>12. Authentication and stored data</h2>
+<h3>Registration and login</h3>
+<p>Users are stored in JSON. Email addresses are normalized to lowercase. Passwords are never stored in plain text: a random 16-byte hexadecimal salt and PBKDF2-HMAC-SHA256 hash are stored. Login uses constant-time comparison through <code>hmac.compare_digest</code>.</p>
+<h3>Where data is stored</h3>
+<table>
+<tr><th>Data</th><th>Location / lifetime</th></tr>
+<tr><td>API key typed in sidebar</td><td>Streamlit session state only; not written to disk by the project.</td></tr>
+<tr><td>Provider/model preference</td><td>Saved per user in <code>users.json</code>; the API key is not saved.</td></tr>
+<tr><td>Query history</td><td>Saved per user in <code>users.json</code>.</td></tr>
+<tr><td>Uploaded data</td><td>Loaded into a temporary in-memory SQLite engine for the current request/session flow.</td></tr>
+<tr><td>Session state</td><td>Managed by Streamlit and reset when the session ends or is refreshed according to Streamlit behavior.</td></tr>
+</table>
+<div class="callout warning"><b>Deployment note:</b> <code>users.json</code> is a local JSON store, not a multi-user production identity system. Use a proper identity provider and database-backed persistence for production.</div>
+
+<h2>13. Operations and maintenance</h2>
+<h3>Routine startup checklist</h3>
+<ol>
+  <li>Activate the intended virtual environment.</li>
+  <li>Verify <code>.env</code> exists and contains the correct provider key.</li>
+  <li>Run <code>pip install -r requirements.txt</code> after dependency changes.</li>
+  <li>Start <code>streamlit run main.py</code>.</li>
+  <li>Use the built-in demo to validate the UI before testing a real key or file.</li>
+</ol>
+<h3>Dependency updates</h3>
+<p>Update <code>requirements.txt</code> deliberately, reinstall in a clean environment, and verify both GPT and Gemini paths. Pay particular attention to Streamlit, LangChain, SQLAlchemy, Pandas, OpenAI, and Google client compatibility.</p>
+<h3>Log and error handling</h3>
+<p>The application uses Python logging for detailed exceptions while presenting a shorter user-facing message. When diagnosing an issue, capture the exception type, provider/model, input mode, file type, and whether the demo path works. Never include API keys in logs or support tickets.</p>
+
+<h2>14. Troubleshooting</h2>
+<table>
+<tr><th>Symptom</th><th>Likely cause</th><th>Action</th></tr>
+<tr><td>“Select a Model and add an API key”</td><td>No sidebar key and no matching environment key.</td><td>Choose a model and set <code>OPENAI_API_KEY</code> or <code>GOOGLE_API_KEY</code> in <code>.env</code>; restart Streamlit after editing.</td></tr>
+<tr><td>Upload validation message</td><td>No file or question was supplied.</td><td>Upload CSV/XLSX files and enter a question. Confirm the uploader shows the files.</td></tr>
+<tr><td>Gemini quota error</td><td>Provider quota or rate limit reached.</td><td>Wait for the quota window, choose another model, or review Google AI Studio limits.</td></tr>
+<tr><td>OpenAI request failed</td><td>Invalid key, model name, network, or provider error.</td><td>Verify key/model, internet access, and provider account status.</td></tr>
+<tr><td>“Unable to read uploaded file”</td><td>Malformed CSV/XLSX, unsupported extension, or missing Excel dependency.</td><td>Open the file locally, save it again, use CSV/XLSX, and reinstall requirements.</td></tr>
+<tr><td>Query returns no rows</td><td>Model guessed a filter value or casing.</td><td>Use exact values from the data; the app makes one automatic correction attempt.</td></tr>
+<tr><td>Preview unavailable in Text Input</td><td>Text Input has no executable database.</td><td>Use Upload File for result preview, or validate the generated SQL in your own database.</td></tr>
+<tr><td>Port already in use</td><td>Another Streamlit process is using 8501.</td><td>Run <code>streamlit run main.py --server.port 8502</code> or stop the other process.</td></tr>
+<tr><td>Login data appears missing</td><td>Wrong working directory or the local JSON file was moved.</td><td>Check the <code>USERS_FILE</code> path in <code>auth.py</code>; preserve backups before moving it.</td></tr>
+</table>
+
+<h2>15. Security and production checklist</h2>
+<ul>
+  <li>Use HTTPS and a reverse proxy for any non-local deployment.</li>
+  <li>Never commit <code>.env</code>, API keys, real user records, or sensitive uploaded data.</li>
+  <li>Replace JSON authentication with an identity provider and a database-backed user store.</li>
+  <li>Use per-user authorization and rate limits for model calls and file uploads.</li>
+  <li>Set upload size/type limits and scan files according to organizational policy.</li>
+  <li>Use a database account with read-only permissions if connecting to an external database.</li>
+  <li>Keep LLM prompts and uploaded data within the approved data-processing boundary.</li>
+  <li>Review generated SQL before using it for decisions or exporting sensitive data.</li>
+  <li>Add structured audit logs that exclude secrets and unnecessary personal data.</li>
+  <li>Pin and periodically update dependencies, and run security scanning in CI.</li>
+</ul>
+
+<h2>16. Developer extension guide</h2>
+<h3>Add a new provider</h3>
+<ol>
+  <li>Add its environment key name in <code>utils.py</code>.</li>
+  <li>Add provider/model options in <code>components/sidebar.py</code>.</li>
+  <li>Construct the provider client in <code>Text2SQL.__init__</code> in <code>process/rag_process.py</code>.</li>
+  <li>Add the dependency to <code>requirements.txt</code>.</li>
+  <li>Test generation, correction, timeout, and quota failures.</li>
+</ol>
+<h3>Change prompts</h3>
+<p>Edit <code>process/prompt_process.py</code>. Preserve the SQL-only contract, schema-only constraint, and explicit fallback response. Test both a straightforward query and an unrelated question.</p>
+<h3>Change the schema pipeline</h3>
+<p>Edit <code>build_table_info</code> and <code>Text2SQL.init_db</code>. Keep table names, columns, sample values, and row counts consistent with the actual SQLite engine. If adding another file type, update the uploader type list, parser, and documentation together.</p>
+<h3>Change result behavior</h3>
+<p>Keep validation in <code>run_query</code> and route new execution paths through it. Do not bypass the single read-only <code>SELECT</code> guard for convenience.</p>
+<h3>Suggested verification matrix</h3>
+<table>
+<tr><th>Case</th><th>Expected result</th></tr>
+<tr><td>Built-in demo, Text Input</td><td>SQL and local demo result appear without an API key.</td></tr>
+<tr><td>Built-in demo, Upload File</td><td>SQL and local preview appear without an API key.</td></tr>
+<tr><td>Real CSV, GPT</td><td>Schema is loaded, SQL generated, SELECT previewed, CSV available.</td></tr>
+<tr><td>Real XLSX, Gemini</td><td>Workbook is read and query flow completes.</td></tr>
+<tr><td>Invalid generated statement</td><td>Read-only validation or correction prevents unsafe execution.</td></tr>
+<tr><td>Empty result</td><td>One filter correction may be attempted; final empty state is explained.</td></tr>
+<tr><td>Logout/login</td><td>Protected workspace is hidden until authentication succeeds.</td></tr>
+</table>
+
+<h2>17. Legacy entry point and licensing</h2>
+<p>The repository contains an older implementation consisting of <code>app.py</code>, <code>database.py</code>, and <code>sql_generator.py</code>. It is retained for reference but is not equivalent to the full application. Its generator currently returns a placeholder string, so use <code>main.py</code> for the implemented AI workflow.</p>
+<p>The project includes MIT license files. Preserve the license notice when distributing or modifying the project, and review third-party dependency licenses before commercial redistribution.</p>
+
+<h2>Quick reference</h2>
+<pre># Install
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+
+# Configure
+copy .env.example .env
+# Set OPENAI_API_KEY or GOOGLE_API_KEY
+
+# Run the full application
+streamlit run main.py
+
+# Optional legacy flow
+streamlit run app.py</pre>
+<div class="footer-note">End of documentation. This guide describes the repository as implemented on 16 November 2026; update it when entry points, providers, storage, or safety behavior changes.</div>
+</body>
+</html>
